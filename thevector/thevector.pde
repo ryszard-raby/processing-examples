@@ -12,26 +12,12 @@ class vector{
     position = new PVector(random(width), random(height));
     velocity = new PVector(0,0);
     acceleration = new PVector(0,0);
-    mouse = new PVector(mouseX, mouseY);
   }
 
   void update(){
-    mouse.x = mouseX;
-    mouse.y = mouseY;
-    mouse.sub(position);
-    mouse.setMag(4);
-    
     velocity.add(acceleration);
-
     position.add(velocity);
-    
     acceleration.mult(0);
-    println(velocity);
-    
-  }
-  
-  void accelerate(){
-    velocity.add(mouse);
   }
   
   void applyForce(PVector force){
@@ -45,18 +31,17 @@ class vector{
     
     if(position.y > height) position.y = height;
     if(position.x > width) position.x = width;
+    if(position.y < 0) position.y = 0;
+    if(position.x < 0) position.x = 0;
   }
   
   void display(){
-
-    stroke(0,0,255);
-    line(position.x,position.y,position.x + mouse.x * 5, position.y + mouse.y * 5);
-       
     stroke(0,255,0);
     line(position.x,position.y,position.x + velocity.x * 5, position.y + velocity.y * 5);
     
-    noStroke();
-    fill(255);
+    stroke(255);
+    //fill(255);
+    noFill();
     ellipse(position.x, position.y, mass*5, mass*5);
     
   }
@@ -78,24 +63,45 @@ void setup(){
 void draw(){
   background(0);
   
-  PVector w = new PVector(0.1,0);
-  
-  for(vector v : v){
-    PVector g = new PVector(0,0.09);
+  for(vector v : v){    
+    // ---------- friction force
+    
     PVector friction = v.velocity.get();
     friction.normalize();
     friction.mult(-1);
     
-    float c = 0.01;
-    friction.mult(c);
+    float c_friction = 0.01;
+    friction.mult(c_friction);
+    if (v.position.y >= height-1 ){
+      println(v.position);
+      v.applyForce(friction);
+    }
     
-    v.applyForce(friction);
+    // ---------- drag force
     
+    PVector drag = v.velocity.get();
+    drag.normalize();
+    drag.mult(-1);
+    
+    float speed = v.velocity.mag();
+    float c_drag = 0.01;
+    
+    drag.mult(c_drag * speed * speed);
+    
+    v.applyForce(drag);
+    
+    // ---------- gravity force
+    PVector g = new PVector(0,0.09);
     g.mult(v.mass);
-    v.applyForce(g);
+    //v.applyForce(g);
+    
+    // ---------- wind force
+    PVector wind = new PVector(mouseX, mouseY);
+    wind.sub(v.position);
+    wind.setMag(-0.1);    
     
     if(mousePressed){
-      v.applyForce(w);
+      v.applyForce(wind);
     }
     
     v.update();
