@@ -42,7 +42,7 @@ class vector{
     //fill(255);
     noFill();
     ellipse(position.x, position.y, mass*5, mass*5);
-    
+    //ellipse(position.x, position.y, 1, 1);
   }
   
 }
