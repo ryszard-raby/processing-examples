@@ -52,7 +52,7 @@ vector[] v;
 
 void setup(){
   size(640,480);
-  v = new vector[5];
+  v = new vector[100];
   for (int i = 0; i < v.length; i++){
     v[i] = new vector();
   }
@@ -73,7 +73,6 @@ void draw(){
     float c_friction = 0.01;
     friction.mult(c_friction);
     if (v.position.y >= height-1 ){
-      println(v.position);
       v.applyForce(friction);
     }
     
@@ -93,12 +92,12 @@ void draw(){
     // ---------- gravity force
     PVector g = new PVector(0,0.09);
     g.mult(v.mass);
-    //v.applyForce(g);
+    v.applyForce(g);
     
     // ---------- wind force
     PVector wind = new PVector(mouseX, mouseY);
     wind.sub(v.position);
-    wind.setMag(-0.1);    
+    wind.setMag(0.8);    
     
     if(mousePressed){
       v.applyForce(wind);
