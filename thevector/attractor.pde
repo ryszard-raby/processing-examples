@@ -18,7 +18,6 @@ class attractor{
     //d = d/2;
     d = constrain(d, 5,20);
     //d = 20;
-    println(d);
     
     force.normalize();
     float strength = G * (mass * v.mass) / (d * d);

@@ -3,7 +3,7 @@ attractor a;
 
 void setup(){
   size(640,480);
-  v = new vector[2];
+  v = new vector[500];
   a = new attractor();
   for (int i = 0; i < v.length; i++){
     v[i] = new vector();
@@ -34,11 +34,11 @@ void draw(){
     drag.mult(-1);
     
     float speed = v.velocity.mag();
-    float c_drag = 0.001;
+    float c_drag = 0.01;
     
     drag.mult(c_drag * speed * speed);
     
-    //v.applyForce(drag);
+    v.applyForce(drag);
     
     // ---------- gravity force
     PVector g = new PVector(0,0.09);
@@ -48,7 +48,7 @@ void draw(){
     // ---------- wind force
     PVector wind = new PVector(mouseX, mouseY);
     wind.sub(v.position);
-    wind.setMag(0.1);    
+    wind.setMag(-0.8);    
     
     if(mousePressed){
       v.applyForce(wind);
@@ -56,7 +56,7 @@ void draw(){
     
     // ---------- attractor force
       PVector attract_force = a.attract(v);
-      a.display();
+      //a.display();
     
       v.applyForce(attract_force);
     
@@ -65,7 +65,7 @@ void draw(){
     PVector right_force = new PVector(0.05,0);
     //v.applyForce(right_force);
     v.update();
-    //v.bounce();
+    v.bounce();
     v.display();
   }
 
